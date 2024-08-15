@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime
 from collections import defaultdict
 import csv
+import matplotlib.pyplot as plt
 
 class Transaction:
     def __init__(self, date, amount, category, description=""):
@@ -68,6 +69,34 @@ class FinanceTracker:
     def filter_by_category(self, category):
         return [t for t in self.transactions if t.category == category]
 
+    def plot_category_summary(self):
+        summary = self.category_summary()
+        categories = list(summary.keys())
+        amounts = list(summary.values())
+
+        plt.figure(figsize=(10, 7))
+        plt.pie(amounts, labels=categories, autopct='%1.1f%%', startangle=140)
+        plt.title("Spending by Category")
+        plt.show()
+
+    def plot_monthly_trends(self):
+        monthly_summary = defaultdict(float)
+        for t in self.transactions:
+            month = t.date.strftime('%Y-%m')
+            monthly_summary[month] += t.amount
+        
+        months = sorted(monthly_summary.keys())
+        amounts = [monthly_summary[m] for m in months]
+
+        plt.figure(figsize=(12, 6))
+        plt.bar(months, amounts, color='skyblue')
+        plt.xlabel('Month')
+        plt.ylabel('Amount')
+        plt.title('Monthly Spending Trends')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()
+
 def get_valid_date(prompt):
     while True:
         try:
@@ -87,8 +116,10 @@ def main_menu():
         print("4. Show Total Balance")
         print("5. Filter Transactions by Date")
         print("6. Filter Transactions by Category")
-        print("7. Save Transactions")
-        print("8. Exit")
+        print("7. Plot Spending by Category")
+        print("8. Plot Monthly Spending Trends")
+        print("9. Save Transactions")
+        print("10. Exit")
 
         choice = input("Choose an option: ")
 
@@ -122,10 +153,16 @@ def main_menu():
             print("Filtered Total Balance:", tracker.total_balance(filtered_transactions))
 
         elif choice == '7':
+            tracker.plot_category_summary()
+
+        elif choice == '8':
+            tracker.plot_monthly_trends()
+
+        elif choice == '9':
             tracker.save_to_csv()
             print("Transactions saved.")
 
-        elif choice == '8':
+        elif choice == '10':
             tracker.save_to_csv()
             print("Goodbye!")
             break

@@ -62,6 +62,8 @@ class FinanceTracker:
                     ))
         except FileNotFoundError:
             print("No transactions found.")
+        except Exception as e:
+            print(f"Error loading transactions: {e}")
 
     def filter_by_date_range(self, start_date, end_date):
         return [t for t in self.transactions if start_date <= t.date <= end_date]
@@ -69,7 +71,7 @@ class FinanceTracker:
     def filter_by_category(self, category):
         return [t for t in self.transactions if t.category == category]
 
-    def plot_category_summary(self):
+    def plot_category_summary(self, save_as_image=False):
         summary = self.category_summary()
         categories = list(summary.keys())
         amounts = list(summary.values())
@@ -77,9 +79,13 @@ class FinanceTracker:
         plt.figure(figsize=(10, 7))
         plt.pie(amounts, labels=categories, autopct='%1.1f%%', startangle=140)
         plt.title("Spending by Category")
-        plt.show()
+        if save_as_image:
+            plt.savefig('category_summary.png')
+            print("Category summary chart saved as 'category_summary.png'.")
+        else:
+            plt.show()
 
-    def plot_monthly_trends(self):
+    def plot_monthly_trends(self, save_as_image=False):
         monthly_summary = defaultdict(float)
         for t in self.transactions:
             month = t.date.strftime('%Y-%m')
@@ -95,7 +101,11 @@ class FinanceTracker:
         plt.title('Monthly Spending Trends')
         plt.xticks(rotation=45)
         plt.tight_layout()
-        plt.show()
+        if save_as_image:
+            plt.savefig('monthly_trends.png')
+            print("Monthly trends chart saved as 'monthly_trends.png'.")
+        else:
+            plt.show()
 
 def get_valid_date(prompt):
     while True:
@@ -103,6 +113,20 @@ def get_valid_date(prompt):
             return datetime.fromisoformat(input(prompt))
         except ValueError:
             print("Invalid date format. Please enter the date in YYYY-MM-DD format.")
+
+def get_valid_float(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Invalid amount. Please enter a numeric value.")
+
+def get_valid_choice(prompt, choices):
+    while True:
+        choice = input(prompt)
+        if choice in choices:
+            return choice
+        print(f"Invalid choice. Please choose from {', '.join(choices)}.")
 
 def main_menu():
     tracker = FinanceTracker()
@@ -118,14 +142,15 @@ def main_menu():
         print("6. Filter Transactions by Category")
         print("7. Plot Spending by Category")
         print("8. Plot Monthly Spending Trends")
-        print("9. Save Transactions")
-        print("10. Exit")
+        print("9. Save Charts as Images")
+        print("10. Save Transactions")
+        print("11. Exit")
 
-        choice = input("Choose an option: ")
+        choice = get_valid_choice("Choose an option: ", [str(i) for i in range(1, 12)])
 
         if choice == '1':
             date = get_valid_date("Enter date (YYYY-MM-DD): ")
-            amount = float(input("Enter amount: "))
+            amount = get_valid_float("Enter amount: ")
             category = input("Enter category: ")
             description = input("Enter description (optional): ")
             tracker.add_transaction(Transaction(date, amount, category, description))
@@ -159,16 +184,17 @@ def main_menu():
             tracker.plot_monthly_trends()
 
         elif choice == '9':
-            tracker.save_to_csv()
-            print("Transactions saved.")
+            tracker.plot_category_summary(save_as_image=True)
+            tracker.plot_monthly_trends(save_as_image=True)
 
         elif choice == '10':
             tracker.save_to_csv()
+            print("Transactions saved.")
+
+        elif choice == '11':
+            tracker.save_to_csv()
             print("Goodbye!")
             break
-
-        else:
-            print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
     main_menu()

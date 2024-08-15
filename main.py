@@ -59,19 +59,48 @@ class FinanceTracker:
         except FileNotFoundError:
             print("No transactions found.")
 
-if __name__ == "__main__":
+def main_menu():
     tracker = FinanceTracker()
     tracker.load_from_csv()
 
-    tracker.add_transaction(Transaction(datetime.now(), 50, "Food", "Grocery shopping"))
-    tracker.add_transaction(Transaction(datetime.now(), -20, "Transport", "Taxi fare"))
-    tracker.add_transaction(Transaction(datetime.now(), 100, "Income", "Freelance work"))
-    tracker.add_transaction(Transaction(datetime.now(), -30, "Entertainment", "Movie tickets"))
+    while True:
+        print("\nPersonal Finance Tracker")
+        print("1. Add Transaction")
+        print("2. Show Transactions")
+        print("3. Show Category Summary")
+        print("4. Show Total Balance")
+        print("5. Save Transactions")
+        print("6. Exit")
 
-    tracker.show_transactions()
-    print("Total Balance:", tracker.total_balance())
+        choice = input("Choose an option: ")
 
-    print("\nCategory Summary:")
-    tracker.summary_by_category()
+        if choice == '1':
+            date = input("Enter date (YYYY-MM-DD): ")
+            amount = float(input("Enter amount: "))
+            category = input("Enter category: ")
+            description = input("Enter description (optional): ")
+            tracker.add_transaction(Transaction(datetime.fromisoformat(date), amount, category, description))
 
-    tracker.save_to_csv()
+        elif choice == '2':
+            tracker.show_transactions()
+
+        elif choice == '3':
+            tracker.summary_by_category()
+
+        elif choice == '4':
+            print("Total Balance:", tracker.total_balance())
+
+        elif choice == '5':
+            tracker.save_to_csv()
+            print("Transactions saved.")
+
+        elif choice == '6':
+            tracker.save_to_csv()
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main_menu()

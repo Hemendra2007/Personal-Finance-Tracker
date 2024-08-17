@@ -55,3 +55,12 @@ The application provides an interactive menu with the following options:
 11. Exit: Exit the application.
 
 ### Images
+
+![4](https://github.com/user-attachments/assets/9efd4ca2-731e-41a3-87a5-7512f202829c)
+![5](https://github.com/user-attachments/assets/e7845cd0-a5d7-4c18-849e-f8e911f78f8a)
+![6](https://github.com/user-attachments/assets/0e6de7a3-50bf-4ef9-9885-f2abdd82c7f1)
+![7](https://github.com/user-attachments/assets/04e20ab7-1402-4199-b740-b181445b105b)
+![8](https://github.com/user-attachments/assets/858c3896-2788-4354-a76c-304df811c0e4)
+![1](https://github.com/user-attachments/assets/f20e44f9-616b-494e-a92e-74e29450a65d)
+![2](https://github.com/user-attachments/assets/e771caf3-fd25-4d14-a923-2b73b9b2d705)
+![3](https://github.com/user-attachments/assets/288e15a5-c313-41eb-8ba0-61e69fb882a9)
